@@ -1,19 +1,86 @@
+let SCREEN_SIZE = 9;
+let currentOperation = '';
+let result = 0;
 buildInterface();
 addButtons();
-let SCREEN_SIZE = 10;
-let buffer = "";
-display();
 
 
-function display()
+function doOperation(operationSign) 
+{
+    switch(operationSign)
+    {
+        case '+':
+            add();
+            break;
+        case '-':
+            substract();
+            break;
+        case '*':
+            multiply();
+            break;
+        case '/':
+            divide();
+            break;
+        case '%':
+            modulo();
+            break;
+        case '+/-':
+            negative();
+        case '=':
+            equal();
+        default:
+            display('ERROR');
+            break;
+
+    }
+}
+
+function add()
 {
     const screen = document.querySelector('#display');
-    let text = screen.value;
-    if (text.length > SCREEN_SIZE)
+    result += Number(screen.value);
+    currentOperation = '+';
+    resetDisplay();
+}
+
+function substract()
+{
+    const screen = document.querySelector('#display');
+    result = (currentOperation) ? result - Number(screen.value) : Number(screen.value);
+    currentOperation = '-';
+    resetDisplay();
+}
+
+function multiply() 
+{
+    const screen = document.querySelector('#display');
+    result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
+    currentOperation = '*';
+    resetDisplay();
+}
+
+function divide()
+{
+    const screen = document.querySelector('#display');
+    if (Number(screen.value))
     {
-        buffer = text.slice(0, text.length - SCREEN_SIZE);
-        screen.value = text.slice(text.length - SCREEN_SIZE); 
+        result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
+        currentOperation = '*';
+        resetDisplay();
     }
+    else
+        display('MATH ERROR');
+}
+
+function resetDisplay()
+{
+    screen.value = "0";
+}
+
+function display(number)
+{
+    const screen = document.querySelector('#display');
+    screen.value = number;
 }
 
 function buildInterface()
@@ -33,12 +100,13 @@ function buildInterface()
 
     display.setAttribute('id', 'display');
     display.setAttribute('name', 'display');
-    display.setAttribute('value', '');
+    display.setAttribute('value', '0');
     display.setAttribute('readonly', 'true');
     resultContainer.appendChild(display);
     
     const link = document.createElement('a');
     link.setAttribute('href', 'https://blackbird410.github.io/');
+    link.setAttribute('target', '_blank');
     link.textContent = "Copyright \u00A9 Neil Taison Rigaud";
     footer.appendChild(link)
 
@@ -66,6 +134,13 @@ function addButtons()
             btn.classList.add('orange');
         else
             btn.classList.add('darkGray');
+
+        if (btnText.match(/[0-9]/i))
+            btn.addEventListener('click', () => {
+                const screen = document.querySelector('#display');
+                if (screen.value.length < SCREEN_SIZE)
+                    screen.value = (screen.value == '0') ? btnText : screen.value + btnText;
+        });
 
         container.appendChild(btn);
     });
