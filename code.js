@@ -2,6 +2,7 @@ let SCREEN_SIZE = 9;
 let currentOperation = '';
 let result = 0;
 buildInterface();
+const screen = document.querySelector('#display');
 addButtons();
 
 function doOperation(operationSign) 
@@ -21,7 +22,7 @@ function doOperation(operationSign)
             divide();
             break;
         case '%':
-            modulo();
+            result  = result % Number(screen.value);
             break;
         case '+/-':
             negative();
@@ -36,15 +37,13 @@ function doOperation(operationSign)
 
 function add()
 {
-    const screen = document.querySelector('#display');
     result += Number(screen.value);
     currentOperation = '+';
     resetDisplay();
 }
 
 function substract()
-{
-    const screen = document.querySelector('#display');
+{   
     result = (currentOperation) ? result - Number(screen.value) : Number(screen.value);
     currentOperation = '-';
     resetDisplay();
@@ -52,7 +51,6 @@ function substract()
 
 function multiply() 
 {
-    const screen = document.querySelector('#display');
     result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
     currentOperation = '*';
     resetDisplay();
@@ -60,7 +58,6 @@ function multiply()
 
 function divide()
 {
-    const screen = document.querySelector('#display');
     if (Number(screen.value))
     {
         result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
@@ -78,7 +75,6 @@ function resetDisplay()
 
 function display(number)
 {
-    const screen = document.querySelector('#display');
     screen.value = number;
 }
 
@@ -120,7 +116,6 @@ function addButtons()
     const container = document.querySelector('.buttons');
     const buttons = ['AC', '+/-', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
     buttons.forEach(btnText => {
-        const screen = document.querySelector('#display');
         const btn = document.createElement('div');
         btn.textContent = btnText;
         btn.classList.add('button', 'container');
@@ -155,7 +150,9 @@ function addButtons()
                 break;
             case '%':
                 btn.addEventListener('click', () => {
-                    
+                    result = Number(screen.value);
+                    currentOperation = '%';
+                    screen.value = '0';
                 });
                 break;
             case '/':
@@ -180,6 +177,8 @@ function addButtons()
                 break;
             case '=':
                 btn.addEventListener('click', () => {
+                    doOperation(currentOperation);
+                    screen.value = result;
                     document.querySelector('#clearBtn').textContent = 'AC';
                 });
                 break;
@@ -198,7 +197,7 @@ function addButtons()
 
 function isAlreadyFloat()
 {
-    let number = document.querySelector('#display').value;
+    let number = screen.value;
     let count = 0;
     let i = 0;
     for (i = 0; i < number.length; i++)
