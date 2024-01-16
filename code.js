@@ -66,7 +66,7 @@ function divide()
         screen.value = "0";
     }
     else
-        display('MATH ERROR');
+        result = 'Math Error';
 }
 
 function display(number)
@@ -158,7 +158,9 @@ function addButtons()
             case '=':
                 btn.addEventListener('click', () => {
                     doOperation(currentOperation);
-                    screen.value = result.toString().slice(0, SCREEN_SIZE);
+                    screen.value = (typeof(Number(result)) == 'number') ? 
+                                    formatNumber(result).slice(0, SCREEN_SIZE) : 
+                                    result;
                     result = 0;
                     currentOperation = '';
                     newOperation = true;
@@ -190,4 +192,26 @@ function isAlreadyFloat()
         if (number[i] == '.')
             count++;
     return count == 1;
+}
+
+function formatNumber(n)
+{
+    let integerPart = (Math.floor(Number(n)).toString());
+    let i = integerPart.length;
+    if (i > 3)
+    {
+        let decimalPart = Math.abs(Number(n) - Number(integerPart)).toString();
+        n = "";
+        i--;
+        let c = 0;
+        while(i >= 0)
+        {
+            n = (c == 3) ? integerPart[i] + ',' + n : integerPart[i] + n;
+            i--;
+            c = (c + 1) % 4;
+        }
+        return (Number(decimalPart)) ? n + decimalPart : n;
+    }
+
+    return n.toString();
 }
