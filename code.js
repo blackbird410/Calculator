@@ -23,7 +23,7 @@ function doOperation(operationSign)
             divide();
             break;
         case '%':
-            result  = result % Number(screen.value);
+            result  = result % Number(removeDots(screen.value));
             break;
         case '+/-':
             negative();
@@ -38,30 +38,30 @@ function doOperation(operationSign)
 
 function add()
 {
-    result += Number(screen.value);
+    result += Number(removeDots(screen.value));
     currentOperation = '+';
     screen.value = "0";
 }
 
 function substract()
 {   
-    result = (currentOperation) ? result - Number(screen.value) : Number(screen.value);
+    result = (currentOperation) ? result - Number(removeDots(screen.value)) : Number(removeDots(screen.value));
     currentOperation = '-';
     screen.value = "0";
 }
 
 function multiply() 
 {
-    result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
+    result = (currentOperation) ? result * Number(removeDots(screen.value)) : Number(removeDots(screen.value));
     currentOperation = 'x';
     screen.value = "0";
 }
 
 function divide()
 {
-    if (Number(screen.value))
+    if (Number(removeDots(screen.value)))
     {
-        result = (currentOperation) ? result / Number(screen.value) : Number(screen.value);
+        result = (currentOperation) ? result / Number(removeDots(screen.value)) : Number(removeDots(screen.value));
         currentOperation = '/';
         screen.value = "0";
     }
@@ -150,7 +150,7 @@ function addButtons()
             case '-':
             case '+':
                 btn.addEventListener('click', () => {
-                    result = Number(screen.value);
+                    result = Number(removeDots(screen.value));
                     currentOperation = btnText;
                     screen.value = '0' 
                 });
@@ -185,7 +185,7 @@ function addButtons()
 
 function isAlreadyFloat()
 {
-    let number = screen.value;
+    let number = removeDots(screen.value);
     let count = 0;
     let i = 0;
     for (i = 0; i < number.length; i++)
@@ -214,4 +214,11 @@ function formatNumber(n)
     }
 
     return n.toString();
+}
+
+function removeDots(n)
+{
+    let r = '';
+    n.split(',').forEach(p => r += p);
+    return r;
 }
