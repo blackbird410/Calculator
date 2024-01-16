@@ -4,7 +4,6 @@ let result = 0;
 buildInterface();
 addButtons();
 
-
 function doOperation(operationSign) 
 {
     switch(operationSign)
@@ -121,12 +120,15 @@ function addButtons()
     const container = document.querySelector('.buttons');
     const buttons = ['AC', '+/-', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
     buttons.forEach(btnText => {
+        const screen = document.querySelector('#display');
         const btn = document.createElement('div');
         btn.textContent = btnText;
         btn.classList.add('button', 'container');
 
         if (btnText == '0')
             btn.setAttribute('id', 'zero');
+        else if (btnText == 'AC')
+            btn.setAttribute('id', 'clearBtn');
 
         if (btnText == 'AC' || btnText == '+/-' || btnText == '%')
             btn.classList.add('gray');
@@ -135,14 +137,72 @@ function addButtons()
         else
             btn.classList.add('darkGray');
 
-        if (btnText.match(/[0-9]/i))
-            btn.addEventListener('click', () => {
-                const screen = document.querySelector('#display');
-                if (screen.value.length < SCREEN_SIZE)
-                    screen.value = (screen.value == '0') ? btnText : screen.value + btnText;
-        });
+        switch(btnText)
+        {
+            case 'AC':
+                btn.addEventListener('click', () => {
+                    result = 0;
+                    screen.value = '0';
+                });
+                break;
+            case '+/-':
+                btn.addEventListener('click', () => {
+                    if (screen.value != '0' && screen.value[0] != '-')
+                        screen.value = '-' + screen.value;
+                    else if (screen.value[0] == '-')
+                        screen.value = screen.value.slice(1);
+                });
+                break;
+            case '%':
+                btn.addEventListener('click', () => {
+                    
+                });
+                break;
+            case '/':
+                btn.addEventListener('click', () => {
+                    
+                });
+                break;
+            case 'x':
+                btn.addEventListener('click', () => {
+                    
+                });
+                break;
+            case '-':
+                btn.addEventListener('click', () => {
+                    
+                });
+                break;
+            case '+':
+                btn.addEventListener('click', () => {
+                    
+                });
+                break;
+            case '=':
+                btn.addEventListener('click', () => {
+                    document.querySelector('#clearBtn').textContent = 'AC';
+                });
+                break;
+            default:
+                btn.addEventListener('click', () => {
+                    if (screen.value.length < SCREEN_SIZE && (btnText != '.' || !isAlreadyFloat()))
+                        screen.value = (screen.value == '0') ? btnText : screen.value + btnText;
+                    document.querySelector('#clearBtn').textContent = 'C';
+                });
+                break;
+        }
 
         container.appendChild(btn);
     });
+}
 
+function isAlreadyFloat()
+{
+    let number = document.querySelector('#display').value;
+    let count = 0;
+    let i = 0;
+    for (i = 0; i < number.length; i++)
+        if (number[i] == '.')
+            count++;
+    return count == 1;
 }
