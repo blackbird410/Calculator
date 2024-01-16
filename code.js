@@ -1,5 +1,6 @@
 let SCREEN_SIZE = 9;
 let currentOperation = '';
+let newOperation = true;
 let result = 0;
 buildInterface();
 const screen = document.querySelector('#display');
@@ -15,7 +16,7 @@ function doOperation(operationSign)
         case '-':
             substract();
             break;
-        case '*':
+        case 'x':
             multiply();
             break;
         case '/':
@@ -29,7 +30,7 @@ function doOperation(operationSign)
         case '=':
             equal();
         default:
-            display('ERROR');
+            display('0');
             break;
 
     }
@@ -39,38 +40,33 @@ function add()
 {
     result += Number(screen.value);
     currentOperation = '+';
-    resetDisplay();
+    screen.value = "0";
 }
 
 function substract()
 {   
     result = (currentOperation) ? result - Number(screen.value) : Number(screen.value);
     currentOperation = '-';
-    resetDisplay();
+    screen.value = "0";
 }
 
 function multiply() 
 {
     result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
-    currentOperation = '*';
-    resetDisplay();
+    currentOperation = 'x';
+    screen.value = "0";
 }
 
 function divide()
 {
     if (Number(screen.value))
     {
-        result = (currentOperation) ? result * Number(screen.value) : Number(screen.value);
-        currentOperation = '*';
-        resetDisplay();
+        result = (currentOperation) ? result / Number(screen.value) : Number(screen.value);
+        currentOperation = '/';
+        screen.value = "0";
     }
     else
         display('MATH ERROR');
-}
-
-function resetDisplay()
-{
-    screen.value = "0";
 }
 
 function display(number)
@@ -149,44 +145,34 @@ function addButtons()
                 });
                 break;
             case '%':
-                btn.addEventListener('click', () => {
-                    result = Number(screen.value);
-                    currentOperation = '%';
-                    screen.value = '0';
-                });
-                break;
             case '/':
-                btn.addEventListener('click', () => {
-                    
-                });
-                break;
             case 'x':
-                btn.addEventListener('click', () => {
-                    
-                });
-                break;
             case '-':
-                btn.addEventListener('click', () => {
-                    
-                });
-                break;
             case '+':
                 btn.addEventListener('click', () => {
-                    
+                    result = Number(screen.value);
+                    currentOperation = btnText;
+                    screen.value = '0' 
                 });
                 break;
             case '=':
                 btn.addEventListener('click', () => {
                     doOperation(currentOperation);
-                    screen.value = result;
+                    screen.value = result.toString().slice(0, SCREEN_SIZE);
+                    result = 0;
+                    currentOperation = '';
+                    newOperation = true;
                     document.querySelector('#clearBtn').textContent = 'AC';
                 });
                 break;
             default:
                 btn.addEventListener('click', () => {
+                    if (newOperation)
+                        screen.value = '0';
                     if (screen.value.length < SCREEN_SIZE && (btnText != '.' || !isAlreadyFloat()))
                         screen.value = (screen.value == '0') ? btnText : screen.value + btnText;
                     document.querySelector('#clearBtn').textContent = 'C';
+                    newOperation = false;
                 });
                 break;
         }
