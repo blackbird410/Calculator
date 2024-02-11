@@ -1,4 +1,5 @@
 This is the implementation of a calculator with basic functionalities such as :
+
 - Addition
 - Substraction
 - Multiplication
