@@ -1,3 +1,5 @@
+import './style.css'
+
 let SCREEN_SIZE = 9;
 let currentOperation = '';
 let newOperation = true;
